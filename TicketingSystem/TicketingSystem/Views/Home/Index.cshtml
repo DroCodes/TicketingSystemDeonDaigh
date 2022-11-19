@@ -1,0 +1,81 @@
+﻿@using TicketingSystem.Models
+@model IEnumerable<Ticket>
+
+<div class="row">
+    <div class="form-group col-sm-2">
+        <form asp-action="Filter" method="post">
+            <label>Name:</label>
+            <select name="filter" class="form-control"
+                    asp-items="@(new SelectList(ViewBag.Name, "Id", "Name", ViewBag.FIlters.Name))">>
+                <option value="all">All</option>
+            </select>
+            <br />
+            <label>Status:</label>
+            <select name="filter" class="form-control"
+                asp-items="@(new SelectList(ViewBag.Status, "StatusId", "StatusName", ViewBag.Filters.StatusId))">
+                <option value="all">All</option>
+            </select>
+            <br />
+            <label>Sprint Number:</label>
+            <select name="filter" class="form-control"
+                asp-items="@(new SelectList(ViewBag.SprintNum, "Id", "SprintNum", ViewBag.FIlters.SprintNum))">
+                <option value="all">All</option>
+            </select>
+            <br />
+            <label>Points:</label>
+            <select name="filter" class="form-control"
+                    asp-items="@(new SelectList(ViewBag.Point, "Id", "Point", ViewBag.FIlters.Point))">>
+                <option value="all">All</option>
+            </select>
+            <button type="submit" class="btn btn-primary">Filter</button>
+            <br />
+            <br />
+            <a asp-action="Index" asp-route-id="" class="btn btn-primary">Clear</a>
+        </form>
+    </div>
+
+    <div class="col-sm-2">
+
+        <a asp-action="Add"><b>Add new ticket</b></a>
+
+        <table class="table table-bordered table-striped mt-2">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Sprint Number</th>
+                    <th>Point Value</th>
+                    <th>Status</th>
+                    <th class="w-25"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (Ticket ticket in Model)
+                {
+                    <tr>
+                        <td>@ticket.Name</td>
+                        <td>@ticket.Description</td>
+                        <td>@ticket.SprintNum</td>
+                        <td>@ticket.Point</td>
+                        <td>@ticket.Status?.StatusName</td>
+                        <td>
+                            <form asp-action="Edit" method="post" asp-route-id="@ViewBag.Filters.FilterString" class="mr-2">
+
+                                <input type="hidden" name="@nameof(Ticket.Id)" value="@ticket.Id" />
+
+                                <button type="submit" name="@nameof(Ticket.StatusId)" value="done"
+                                class="btn btn-primary btn-sm">
+                                    Done
+                                </button>
+
+                                <button type="submit" class="btn btn-primary btn-sm">
+                                    Delete
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
